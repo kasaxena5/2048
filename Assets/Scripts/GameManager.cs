@@ -18,8 +18,8 @@ public class GameManager : MonoBehaviour
     private void SpawnNewTile()
     {
         tiles[0, 0] = Instantiate(tilePrefab);
-        tiles[1, 0] = Instantiate(tilePrefab);
-        tiles[2, 0] = Instantiate(tilePrefab);
+        tiles[1, 2] = Instantiate(tilePrefab);
+        tiles[2, 1] = Instantiate(tilePrefab);
         tiles[3, 0] = Instantiate(tilePrefab);
 
     }
@@ -33,24 +33,49 @@ public class GameManager : MonoBehaviour
     private void MoveTiles(int k)
     {
         Tile[,] newTiles = new Tile[n, n];
+
         bool dirX = dx[k] > 0;
-        bool dirY = dy[k] > 0;
-        for(int i = 0; i < n; i++)
+        if (dx[k] != 0)
         {
-            int j = (dirX) ? n - 1 : 0;
-            int lastValidPosition = (dirX) ? n : -1;
-            while((dirX) ? j >= 0 : j < n)
+            for (int i = 0; i < n; i++)
             {
-                int step = (dirX) ? -1 : 1;
-                if (tiles[i, j] != null)
+                int j = (dirX) ? n - 1 : 0;
+                int lastValidPosition = (dirX) ? n : -1;
+                while ((dirX) ? j >= 0 : j < n)
                 {
-                    tiles[i, j].GetComponent<MovementController>().MoveTowards(new Vector2(lastValidPosition + step, i));
-                    newTiles[i, lastValidPosition + step] = tiles[i, j];
-                    lastValidPosition = j;
+                    int step = (dirX) ? -1 : 1;
+                    if (tiles[i, j] != null)
+                    {
+                        tiles[i, j].GetComponent<MovementController>().MoveTowards(new Vector2(lastValidPosition + step, i));
+                        newTiles[i, lastValidPosition + step] = tiles[i, j];
+                        lastValidPosition = j;
+                    }
+                    j += step;
                 }
-                j += step;
             }
         }
+
+        bool dirY = dy[k] < 0;
+        if (dy[k] != 0)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                int i = (dirY) ? n - 1 : 0;
+                int lastValidPosition = (dirY) ? n : -1;
+                while ((dirY) ? i >= 0 : i < n)
+                {
+                    int step = (dirY) ? -1 : 1;
+                    if (tiles[i, j] != null)
+                    {
+                        tiles[i, j].GetComponent<MovementController>().MoveTowards(new Vector2(j, lastValidPosition + step));
+                        newTiles[lastValidPosition + step, j] = tiles[i, j];
+                        lastValidPosition = i;
+                    }
+                    i += step;
+                }
+            }
+        }
+
         tiles = newTiles;
         //SpawnNewTile();
     }
