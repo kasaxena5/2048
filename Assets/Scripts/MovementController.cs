@@ -12,6 +12,7 @@ public class MovementController : MonoBehaviour
     private float lerpDuration = 3;
 
     private Vector2 valueToLerp;
+    private Vector2 originalPosition;
 
     private void Awake()
     {
@@ -22,7 +23,6 @@ public class MovementController : MonoBehaviour
     {
         if(!isMoving)
         {
-            StopAllCoroutines();
             isMoving = true;
             StartCoroutine(Lerp(newPos));
         }
@@ -32,14 +32,17 @@ public class MovementController : MonoBehaviour
     IEnumerator Lerp(Vector2 newPosition)
     {
         float timeElapsed = 0;
+        originalPosition = tile.transform.position;
         while (timeElapsed < lerpDuration)
         {
-            valueToLerp = Vector2.Lerp(tile.transform.position, newPosition, timeElapsed / (lerpDuration * Time.deltaTime));
+            float t = timeElapsed / lerpDuration;
+            valueToLerp = Vector2.Lerp(originalPosition, newPosition, t);
             tile.transform.position = valueToLerp;
             timeElapsed += Time.deltaTime;
             yield return null;
         }
         isMoving = false;
+        Debug.Log(isMoving);
         valueToLerp = newPosition;
         tile.transform.position = newPosition;
     }
