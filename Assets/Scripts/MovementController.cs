@@ -34,7 +34,7 @@ public class MovementController : MonoBehaviour
         float timeElapsed = 0;
         while (timeElapsed < lerpDuration)
         {
-            valueToLerp = Vector2.Lerp(tile.transform.position, newPosition, timeElapsed / lerpDuration);
+            valueToLerp = Vector2.Lerp(tile.transform.position, newPosition, timeElapsed / (lerpDuration * Time.deltaTime));
             tile.transform.position = valueToLerp;
             timeElapsed += Time.deltaTime;
             yield return null;
