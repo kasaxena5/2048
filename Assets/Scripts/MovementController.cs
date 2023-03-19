@@ -14,6 +14,8 @@ public class MovementController : MonoBehaviour
     private Vector2 valueToLerp;
     private Vector2 originalPosition;
 
+    
+
     private void Awake()
     {
         tile = GetComponent<Tile>();
@@ -29,7 +31,18 @@ public class MovementController : MonoBehaviour
 
     }
 
-    IEnumerator Lerp(Vector2 newPosition)
+    public void MoveTowardsAndCombine(Vector2 newPos, Tile targetTile)
+    {
+        if (!isMoving)
+        {
+            isMoving = true;
+            tile.isValid = false;
+            StartCoroutine(Lerp(newPos, true, targetTile));
+        }
+
+    }
+
+    IEnumerator Lerp(Vector2 newPosition, bool merge=false, Tile targetTile=null)
     {
         float timeElapsed = 0;
         originalPosition = tile.transform.position;
@@ -42,8 +55,13 @@ public class MovementController : MonoBehaviour
             yield return null;
         }
         isMoving = false;
-        Debug.Log(isMoving);
         valueToLerp = newPosition;
         tile.transform.position = newPosition;
+
+        if(merge)
+        {
+            Destroy(this.gameObject);
+            targetTile.SetState(targetTile.GetState() + 1);
+        }
     }
 }

@@ -10,8 +10,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private int n = 4;
 
-    private int[] dx = new int[] { 1, -1, 0, 0 };
-    private int[] dy = new int[] { 0, 0, -1, 1 };
+    private static readonly int[] dx = new int[] { 1, -1, 0, 0 };
+    private static readonly int[] dy = new int[] { 0, 0, -1, 1 };
 
     private Tile[,] tiles;
 
@@ -46,9 +46,16 @@ public class GameManager : MonoBehaviour
                     int step = (dirX) ? -1 : 1;
                     if (tiles[i, j] != null)
                     {
-                        tiles[i, j].GetComponent<MovementController>().MoveTowards(new Vector2(lastValidPosition + step, i));
-                        newTiles[i, lastValidPosition + step] = tiles[i, j];
-                        lastValidPosition = j;
+                        if (lastValidPosition >= 0 && lastValidPosition < n && newTiles[i, lastValidPosition] != null && newTiles[i, lastValidPosition].GetState() == tiles[i, j].GetState() && newTiles[i, lastValidPosition].isValid)
+                        {
+                            tiles[i, j].GetComponent<MovementController>().MoveTowardsAndCombine(new Vector2(lastValidPosition, i), newTiles[i, lastValidPosition]);
+                        }
+                        else
+                        {
+                            tiles[i, j].GetComponent<MovementController>().MoveTowards(new Vector2(lastValidPosition + step, i));
+                            newTiles[i, lastValidPosition + step] = tiles[i, j];
+                            lastValidPosition = lastValidPosition + step;
+                        }
                     }
                     j += step;
                 }
@@ -67,9 +74,16 @@ public class GameManager : MonoBehaviour
                     int step = (dirY) ? -1 : 1;
                     if (tiles[i, j] != null)
                     {
-                        tiles[i, j].GetComponent<MovementController>().MoveTowards(new Vector2(j, lastValidPosition + step));
-                        newTiles[lastValidPosition + step, j] = tiles[i, j];
-                        lastValidPosition = i;
+                        if (lastValidPosition >= 0 && lastValidPosition < n && newTiles[lastValidPosition, j] != null && newTiles[lastValidPosition, j].GetState() == tiles[i, j].GetState() && newTiles[lastValidPosition, j].isValid)
+                        {
+                            tiles[i, j].GetComponent<MovementController>().MoveTowardsAndCombine(new Vector2(j, lastValidPosition), newTiles[lastValidPosition, j]);
+                        }
+                        else
+                        {
+                            tiles[i, j].GetComponent<MovementController>().MoveTowards(new Vector2(j, lastValidPosition + step));
+                            newTiles[lastValidPosition + step, j] = tiles[i, j];
+                            lastValidPosition = lastValidPosition + step;
+                        }
                     }
                     i += step;
                 }

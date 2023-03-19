@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 1
+  isValid: 1
   i: 0
   j: 0
 --- !u!114 &1816799709
@@ -113,4 +114,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f7374688e6afab41badac88858087a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lerpDuration: 0.03
+  lerpDuration: 0.3
