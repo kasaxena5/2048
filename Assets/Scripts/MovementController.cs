@@ -36,6 +36,7 @@ public class MovementController : MonoBehaviour
         if (!isMoving)
         {
             isMoving = true;
+            targetTile.isValid = false;
             tile.isValid = false;
             StartCoroutine(Lerp(newPos, true, targetTile));
         }
@@ -61,6 +62,7 @@ public class MovementController : MonoBehaviour
         if(merge)
         {
             Destroy(this.gameObject);
+            targetTile.isValid = true;
             targetTile.SetState(targetTile.GetState() + 1);
         }
     }

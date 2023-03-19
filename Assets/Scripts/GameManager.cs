@@ -17,10 +17,18 @@ public class GameManager : MonoBehaviour
 
     private void SpawnNewTile()
     {
-        tiles[0, 0] = Instantiate(tilePrefab);
-        tiles[1, 2] = Instantiate(tilePrefab);
-        tiles[2, 1] = Instantiate(tilePrefab);
-        tiles[3, 0] = Instantiate(tilePrefab);
+        bool hit = false;
+        while (!hit)
+        {
+            int i = Random.Range(0, 3);
+            int j = Random.Range(0, 3);
+            if(tiles[i, j] == null)
+            {
+                tiles[i, j] = Instantiate(tilePrefab);
+                tiles[i, j].transform.position = new Vector2(j, i);
+                hit = true;
+            }
+        }
 
     }
 
@@ -91,7 +99,7 @@ public class GameManager : MonoBehaviour
         }
 
         tiles = newTiles;
-        //SpawnNewTile();
+        SpawnNewTile();
     }
 
     void Start()
